@@ -1,0 +1,72 @@
+Convention Scripte
+******************
+
+hier sollen Scripte entstehen, die man für Webpresenzen von
+Veranstalltungen verwenden kann.
+
+++
+++ Inhalt
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Anmeldung/:
+-----------
+- example.html
+      (html formular was die daten an formmail.php weiterleitet)
+
+- formmail.php
+      (php Script das die übergebenen Formulardaten auswertet,und verarbeitet)
+
+      * speichert den eingegebenen Datensatz in einer cvs -ähnlichen Datei auf dem Server
+      * speichert die Anzahl der Teilnehmer insgesammt in einer seperaten Datei
+      * speiert den gesamt Umsatz in einer seperaten Datei
+      * sendet bei anmeldungen mit Bemerkung eine Mail an einen Orga (Template)
+      * sendet eine Bestätigungsmail mit allen infos an den Anmelder (Template)
+      * gibt die wichtigesten Daten auch noch mal direkt aus (Template)
+
+- formmail.lib.php
+      (enthält alle wichtigen Funktionen die in formmail.php aufgerufen werden)
+
+- Template.php
+      (ist eine Template Klasse die für folgende Templates gebraucht wird:)
+      * mail.htm (die mail an den Anmelder)
+      * info_mail.htm (die mail an einen Orga)
+      * return.htm (die Ausgabe, die kommt nach dem das Formular abgeschickt wurde)
+
+  folgende Dateien legen sich selbst an:
+- [daten.php]
+      (enthält die ganzen Daten der bisherigen Anmeldungen,
+       einen Datensatz pro Zeile
+       ACHTUNG wichtig für das verwenden dieser Datei:
+       Die Eingaben werden nahezu 1 zu 1 gespeichert die Datei kann also gefährlichen
+       php-code enthalten)
+- [id.txt]
+      (enthält die aktuelle ID der Anmeldung - wird automatisch erhöht)
+- [statistics.txt]
+      (enthält folgenden Datensatz Anz_Erwachsenen;Anz_Kindern;Anz_Kleinkindern;ges_Pers_Anz;ges_Umsatz)
+
+
+++
+++ Installation
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Konfigurieren:
+- alle Dateien *.example.* müssen angepasst werden. Die *.htm Dateien sind Templates und können
+  beliebig gestalltet werden. So {} geklammerte begriffe sind Variablen und werden ersetzt
+- danach müssen diese Dateien alle so umgenannt werde, sodass kein example mehr im Name ist
+  also aus mail.example.htm wird mail.htm (example.htm behält seinen Namen)
+
+Hochladen:
+- dann müssen alle Dateien außer example.htm nur noch auf einen Webserver gepackt werden.
+  Die verzeichnis Berechtigung muss auf writalbe sein, da 3 Dateien angelegt werten.
+  z.B. mit etas wie diesen
+  $ chmod a+w directory
+- außerdem müssen mails verschickt werden können
+
+jetzt kann man den Inhalt der example.htm nehmen und in irgend ein System was nur HTML
+annimmt dort einfügen. Das trifft z.B. auf sämtliche Zusammenklick-Website zu.
+
+zubeachten ist nur das im Formular unter action="" die URL vom php-Script formmail.php steht
+
+
+
+jetzt sollte das ganze laufen und wenn nicht dann nicht^^
