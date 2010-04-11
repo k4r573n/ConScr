@@ -319,7 +319,7 @@ function extract_csv($save) {
 	fclose ($file);
 
   //und als csv file generieren
-  $csv = implode(',', $keys)."\n");//kopf mit den keys
+  $csv = implode(',', $keys)."\n";//kopf mit den keys
   //daten
   foreach($inhalt as $key => $row) {
     if (($row["ki_count"]==0)&&($row["ba_count"]==0)&&($row["ew_count"]==0)) {
