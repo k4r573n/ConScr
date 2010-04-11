@@ -192,7 +192,7 @@ function save_data($daten) {
   	foreach ($GLOBALS["anmeldung_fields"]  AS $key) {
       $head = $head.$key.$GLOBALS["splitter"];
     }
-    //das Trennzeichen wieder entfernen und einen Zeilenumbruch anfügen:
+    //das letzte Trennzeichen wieder entfernen und einen Zeilenumbruch anfügen:
     $head = substr($head,0,-strlen($GLOBALS["splitter"]))."\n";
   }
 
@@ -211,7 +211,7 @@ function save_data($daten) {
   */
 function sends_info($daten,$stat) {
   $empfaenger = ORGA_MAIL;
-  $from = FROM;
+  $from = $daten["mail"];
   $betreff = ORGA_SUBJECT."(".$daten["name"].")";
   $tmp = new Template('./info_mail.htm');
 
@@ -289,6 +289,51 @@ function generate_mail($daten,$rechnung) {
 
 }
 
+
+/** erstellt eine csv Datei und schickt den link darauf an den Orga
+  *
+  */
+function extract_csv() {
+//**UNTESTET**//
+////////////////
+
+	//öffnet im lese modos
+  $inhalt = array();
+  $file = fopen("daten.php","r");
+  //erste Zeile mit php code entfernen
+  $ignore = fgets($file,1000);
+  //keys einlesen
+  $keys = explode($GLOBALS["splitter"], fgets($file,1000));
+
+  //daten einlesen
+  $i = 0;
+  while (!feof($file)) {
+	  $zeile = explode($GLOBALS["splitter"], fgets($file,1000));
+    foreach($keys as $key => $value) {
+      //weißt den wert den in der ersten zeile def. key zu (damit die spalten
+      //auch vertauscht werden könnten
+      $inhalt[$i][$value]=$zeile[$key];  
+    }
+	  $i++;
+  }
+	fclose ($file);
+
+  //und als csv file speichern
+	$file = fopen("daten.csv","w");
+	//kopf speichern
+	fwrite ($file, implode(',', $keys)."\n");
+  //alle außer leere felder extraieren
+  foreach($inhalt as $key => $row) {
+    if (($row["ki_count"]==0)&&($row["ba_count"]==0)&&($row["ew_count"]==0)) {
+      continue;
+    }
+    //sonst speichern achtung die zeile darf sonst kein "," enthalten
+	  fwrite ($file, implode(',', clean_array_from_comma($row))."\n");
+	}
+	fclose ($file);
+
+}
+
 /** löscht alle ungewöhnlichen Zeichen aus der
 	* eingabe (damit das speichern klappt)
 	* wenn $html = true ist, werden alle sonderzeichen in html verwandelt
@@ -330,4 +375,16 @@ function clean_array(&$string,$html) {
 	}
 }
 
+//für csv file
+function clean_array_from_comma(&$string) {
+	if(is_string($string)) {
+		$string = str_replace(",", ".", $string);
+	}else{
+		if(is_array($string)) {
+			foreach($string AS $key => $value) {
+				clean_array_from_comma($string[$key]);
+			}
+		}
+	}
+}
 ?>
