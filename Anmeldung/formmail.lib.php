@@ -322,11 +322,12 @@ function extract_csv($save) {
   $csv = implode(',', $keys)."\n";//kopf mit den keys
   //daten
   foreach($inhalt as $key => $row) {
-    if (($row["ki_count"]==0)&&($row["ba_count"]==0)&&($row["ew_count"]==0)) {
+    if (($inhalt[$key]["ki_count"]==0)&&($inhalt[$key]["ba_count"]==0)&&($inhalt[$key]["ew_count"]==0)) {
       continue;
     }
     //sonst speichern
-	  $csv.= implode(',', clean_array_from_comma($row))."\n";
+    clean_array_from_comma($row);
+	  $csv.= implode(',', $row)."\n";
 	}
 
   if ($save==1) { 
@@ -343,7 +344,7 @@ function extract_csv($save) {
   $text = $csv;
 
 	mail($empfaenger, $betreff, $text, "From: ".$from.
-					"\nContent-Type: text/html; charset=utf8");
+					"\nContent-Type: text; charset=utf8");
 }
 
 /** löscht alle ungewöhnlichen Zeichen aus der
