@@ -303,12 +303,12 @@ function extract_csv($save) {
   //erste Zeile mit php code entfernen
   $ignore = fgets($file,1000);
   //keys einlesen
-  $keys = explode($GLOBALS["splitter"], fgets($file,1000));
+  $keys = explode($GLOBALS["splitter"], trim(fgets($file,1000)));
 
   //daten einlesen
   $i = 0;
   while (!feof($file)) {
-	  $zeile = explode($GLOBALS["splitter"], fgets($file,1000));
+	  $zeile = explode($GLOBALS["splitter"], trim(fgets($file,1000)));
     foreach($keys as $key => $value) {
       //weißt den wert den in der ersten zeile def. key zu (damit die spalten
       //auch vertauscht werden könnten
@@ -319,15 +319,14 @@ function extract_csv($save) {
 	fclose ($file);
 
   //und als csv file generieren
-  $csv = implode(',', $keys)."\n";//kopf mit den keys
+  $csv = implode($GLOBALS["splitter"], $keys)."\n";//kopf mit den keys
   //daten
   foreach($inhalt as $key => $row) {
-    if (($inhalt[$key]["ki_count"]==0)&&($inhalt[$key]["ba_count"]==0)&&($inhalt[$key]["ew_count"]==0)) {
-      continue;
-    }
+    if (($inhalt[$key]["ki_count"]==0)&&($inhalt[$key]["ba_count"]==0)&&($inhalt[$key]["ew_count"]==0)) 
+      { continue; }
     //sonst speichern
-    clean_array_from_comma($row);
-	  $csv.= implode(',', $row)."\n";
+//    clean_array_from_comma($row); //nur nötig wenn ein Komma als seperator genutzt wird
+	  $csv.= implode($GLOBALS["splitter"], $row)."\n";
 	}
 
   if ($save==1) { 
