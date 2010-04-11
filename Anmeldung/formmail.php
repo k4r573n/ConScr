@@ -20,6 +20,8 @@ require_once "./config.php";
 require_once "./formmail.lib.php";
 require_once './Template.php';
 
+//testing
+extract_csv(0);
 
 $daten_org = recive_formular();
 $daten_no_html = $daten_org;//ka ob das nur die addresse rüber kopiert ist hier aber auch egal
