@@ -326,7 +326,7 @@ function extract_csv($save) {
       continue;
     }
     //sonst speichern
-	  $csv.= implode(',', clean_array_from_comma($row))."\n");
+	  $csv.= implode(',', clean_array_from_comma($row))."\n";
 	}
 
   if ($save==1) { 
