@@ -293,7 +293,7 @@ function generate_mail($daten,$rechnung) {
 /** erstellt eine csv Datei und schickt den link darauf an den Orga
   *
   */
-function extract_csv() {
+function extract_csv($save) {
 //**UNTESTET**//
 ////////////////
 
@@ -318,20 +318,32 @@ function extract_csv() {
   }
 	fclose ($file);
 
-  //und als csv file speichern
-	$file = fopen("daten.csv","w");
-	//kopf speichern
-	fwrite ($file, implode(',', $keys)."\n");
-  //alle außer leere felder extraieren
+  //und als csv file generieren
+  $csv = implode(',', $keys)."\n");//kopf mit den keys
+  //daten
   foreach($inhalt as $key => $row) {
     if (($row["ki_count"]==0)&&($row["ba_count"]==0)&&($row["ew_count"]==0)) {
       continue;
     }
-    //sonst speichern achtung die zeile darf sonst kein "," enthalten
-	  fwrite ($file, implode(',', clean_array_from_comma($row))."\n");
+    //sonst speichern
+	  $csv.= implode(',', clean_array_from_comma($row))."\n");
 	}
-	fclose ($file);
 
+  if ($save==1) { 
+    //wenn auch auf dem server gespeichert werden soll (ggf unsicher)
+  	$file = fopen("daten.csv","w");
+	  fwrite ($file, $csv);
+	  fclose ($file);
+	}
+
+  //als mail versenden
+  $empfaenger = ORGA_MAIL;
+  $from = FROM;
+  $betreff = EVENT." ( Daten )";
+  $text = $csv;
+
+	mail($empfaenger, $betreff, $text, "From: ".$from.
+					"\nContent-Type: text/html; charset=utf8");
 }
 
 /** löscht alle ungewöhnlichen Zeichen aus der
